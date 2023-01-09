@@ -40,6 +40,13 @@ class SpotifyPlaybackProvider(backend.PlaybackProvider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._cache_location = Extension().get_cache_dir(self.backend._config)
+        
+        username = self.backend._config["spotify"]["username"]
+        password = self.backend._config["spotify"]["password"]
+        self._auth_string = f"username={username}&password={password}"
+
+    def translate_uri(self, uri):
+        return f"{uri}?{self._auth_string}"
 
     def on_source_setup(self, source):
         config = self.backend._config["spotify"]
